@@ -33,10 +33,16 @@ public class StudentController {
     @RequestMapping(value = "/student", method = RequestMethod.POST)
     public String addNewUsers(@RequestBody Model student) {
         try {
-            Document doc = Document.parse(student.toString());
-            doc.put("_id", UUID.randomUUID().toString());
-            MongoCursor cursor = (MongoCursor) collection.insertOne(doc);
-            return "Student Created";
+            MongoCursor c = collection.find(Filters.and(Filters.eq("studentName", student.getStudentName()), Filters.eq("cources", student.getCources()))).iterator();
+            if (c != null) {
+                System.out.println("This Student Already Associated with this course");
+
+            } else {
+                Document doc = Document.parse(student.toString());
+                doc.put("_id", UUID.randomUUID().toString());
+                MongoCursor cursor = (MongoCursor) collection.insertOne(doc);
+                return "Student Created";
+            }
 
         } catch (Exception e) {
             System.out.println("Some Exception are occurred");
@@ -57,14 +63,14 @@ public class StudentController {
         return null;
     }
 
-
     @RequestMapping(value = "/student/{studentid}", method = RequestMethod.DELETE)
     public String deleteStudent(@PathVariable("studentid") String studenName) {
         try {
             MongoCursor count = (MongoCursor) collection.deleteOne(Filters.eq("studentName", studenName));
+            return "Record Deleted Succussfully";
         } catch (Exception e) {
             System.out.println("Some Exception occurred");
         }
-        return "Record Deleted Successfully";
+        return null;
     }
 }
