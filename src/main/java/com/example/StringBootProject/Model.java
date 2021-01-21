@@ -3,48 +3,78 @@ package com.example.StringBootProject;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+
 
 @Document
 public class Model {
 
     @Id
-    private String userId;
-    private String name;
-    private Date creationDate = new Date();
-    private Map<String, String> userSettings = new HashMap<>();
+    private String studentId;
+    private String studentName;
+    private String studentAddress;
+    private String studentCollege;
 
-    public String getUserId() {
-        return userId;
+    @Override
+    public String toString() {
+        return "Model{" +
+                "studentId='" + studentId + '\'' +
+                ", studentName='" + studentName + '\'' +
+                ", studentAddress='" + studentAddress + '\'' +
+                ", studentCollege='" + studentCollege + '\'' +
+                ", cources=" + cources +
+                '}';
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public Model(String studentId, String studentName, String studentAddress, String studentCollege, ArrayList<String> cources) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.studentAddress = studentAddress;
+        this.studentCollege = studentCollege;
+        this.cources = cources;
     }
 
-    public String getName() {
-        return name;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public String getStudentName() {
+        return studentName;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
-    public Map<String, String> getUserSettings() {
-        return userSettings;
+    public String getStudentAddress() {
+        return studentAddress;
     }
 
-    public void setUserSettings(Map<String, String> userSettings) {
-        this.userSettings = userSettings;
+    public void setStudentAddress(String studentAddress) {
+        this.studentAddress = studentAddress;
     }
+
+    public String getStudentCollege() {
+        return studentCollege;
+    }
+
+    public void setStudentCollege(String studentCollege) {
+        this.studentCollege = studentCollege;
+    }
+
+    public ArrayList<String> getCources() {
+        return cources;
+    }
+
+    public void setCources(ArrayList<String> cources) {
+        this.cources = cources;
+    }
+
+    private ArrayList<String> cources = new ArrayList<String>();
+
+
 }

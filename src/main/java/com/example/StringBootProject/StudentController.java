@@ -7,12 +7,10 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
-import java.util.List;
-import java.util.logging.Filter;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/")
@@ -34,24 +32,24 @@ public class StudentController {
 
     @RequestMapping(value = "/student", method = RequestMethod.POST)
     public String addNewUsers(@RequestBody Model student) {
-       try {
-           MongoCursor cursor= (MongoCursor) collection.insertOne(Document.parse(student.toString()));
-           return "Student Created";
+        try {
+            Document doc = Document.parse(student.toString());
+            doc.put("_id", UUID.randomUUID().toString());
+            MongoCursor cursor = (MongoCursor) collection.insertOne(doc);
+            return "Student Created";
 
-       }catch (Exception e)
-       {
-           System.out.println("Some Exception are occurred");
-       }
-       return null;
+        } catch (Exception e) {
+            System.out.println("Some Exception are occurred");
+        }
+        return null;
     }
 
     @RequestMapping(value = "/update/{studentName}", method = RequestMethod.PUT)
-    public String updateStudent(@RequestBody Model student, @PathParam("studentName") String studentName)
-    {
+    public String updateStudent(@RequestBody Model student, @PathParam("studentName") String studentName) {
         try {
-            BasicDBObject bds=new BasicDBObject();
-            bds.put("studentName",studentName);
-            collection.updateOne(bds,Document.parse(student.toString()));
+            BasicDBObject bds = new BasicDBObject();
+            bds.put("studentName", studentName);
+            collection.updateOne(bds, Document.parse(student.toString()));
             return "Student Record updated";
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,8 +62,7 @@ public class StudentController {
     public String deleteStudent(@PathVariable("studentid") String studenName) {
         try {
             MongoCursor count = (MongoCursor) collection.deleteOne(Filters.eq("studentName", studenName));
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Some Exception occurred");
         }
         return "Record Deleted Successfully";
