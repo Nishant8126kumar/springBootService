@@ -1,12 +1,18 @@
 package com.example.StringBootProject;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
+import java.util.List;
+import java.util.logging.Filter;
 
 @RestController
 @RequestMapping(value = "/")
@@ -39,12 +45,22 @@ public class StudentController {
        return null;
     }
 
-    @PutMapping("/update/student")
-    public void updateStudent() {
-        System.out.println("From put request");
+    @RequestMapping(value = "/update/{studentName}", method = RequestMethod.PUT)
+    public String updateStudent(@RequestBody Model student, @PathParam("studentName") String studentName)
+    {
+        try {
+            BasicDBObject bds=new BasicDBObject();
+            bds.put("studentName",studentName);
+            collection.updateOne(bds,Document.parse(student.toString()));
+            return "Student Record updated";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    @DeleteMapping("/student/{studentid}")
+
+    @RequestMapping(value = "/student/{studentid}", method = RequestMethod.DELETE)
     public String deleteStudent(@PathVariable("studentid") String studenName) {
         try {
             MongoCursor count = (MongoCursor) collection.deleteOne(Filters.eq("studentName", studenName));
